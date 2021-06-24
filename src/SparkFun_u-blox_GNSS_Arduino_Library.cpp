@@ -3004,7 +3004,7 @@ sfe_ublox_status_e SFE_UBLOX_GNSS::waitForACKResponse(ubxPacket *outgoingUBX, ui
 
     } //checkUbloxInternal == true
 
-    delayMicroseconds(500);
+    delay(1);
   } //while (millis() - startTime < maxTime)
 
   // We have timed out...
@@ -3114,7 +3114,7 @@ sfe_ublox_status_e SFE_UBLOX_GNSS::waitForNoACKResponse(ubxPacket *outgoingUBX, 
       }
     }
 
-    delayMicroseconds(500);
+    delay(1);
   }
 
   if (_printDebug == true)
