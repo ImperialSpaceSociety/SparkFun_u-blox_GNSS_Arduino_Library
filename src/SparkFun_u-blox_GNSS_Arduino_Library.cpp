@@ -41,6 +41,7 @@
 */
 
 #include "SparkFun_u-blox_GNSS_Arduino_Library.h"
+#include <FreeRTOS_SAMD21.h>
 
 SFE_UBLOX_GNSS::SFE_UBLOX_GNSS(void)
 {
@@ -629,7 +630,7 @@ boolean SFE_UBLOX_GNSS::checkUbloxI2C(ubxPacket *incomingUBX, uint8_t requestedC
         if (debugPin >= 0)
         {
           digitalWrite((uint8_t)debugPin, LOW);
-          delay(10);
+          vTaskDelay( (10 * 1000) / portTICK_PERIOD_US );
           digitalWrite((uint8_t)debugPin, HIGH);
         }
         lastCheck = millis(); //Put off checking to avoid I2C bus traffic
@@ -719,11 +720,11 @@ boolean SFE_UBLOX_GNSS::checkUbloxI2C(ubxPacket *incomingUBX, uint8_t requestedC
               {
                 _debugSerial->println(F("checkUbloxU2C: u-blox error, module not ready with data (7F error)"));
               }
-              delay(5); //In logic analyzation, the module starting responding after 1.48ms
+              vTaskDelay( (5 * 1000) / portTICK_PERIOD_US ); //In logic analyzation, the module starting responding after 1.48ms
               if (debugPin >= 0)
               {
                 digitalWrite((uint8_t)debugPin, LOW);
-                delay(10);
+                vTaskDelay( (10 * 1000) / portTICK_PERIOD_US );
                 digitalWrite((uint8_t)debugPin, HIGH);
               }
               goto TRY_AGAIN;
@@ -1620,7 +1621,7 @@ void SFE_UBLOX_GNSS::processUBX(uint8_t incoming, ubxPacket *incomingUBX, uint8_
         if (debugPin >= 0)
         {
           digitalWrite((uint8_t)debugPin, LOW);
-          delay(10);
+          vTaskDelay( (10 * 1000) / portTICK_PERIOD_US );
           digitalWrite((uint8_t)debugPin, HIGH);
         }
 
@@ -3004,7 +3005,7 @@ sfe_ublox_status_e SFE_UBLOX_GNSS::waitForACKResponse(ubxPacket *outgoingUBX, ui
 
     } //checkUbloxInternal == true
 
-    delay(1);
+    vTaskDelay( (1 * 1000) / portTICK_PERIOD_US );
   } //while (millis() - startTime < maxTime)
 
   // We have timed out...
@@ -3114,7 +3115,7 @@ sfe_ublox_status_e SFE_UBLOX_GNSS::waitForNoACKResponse(ubxPacket *outgoingUBX, 
       }
     }
 
-    delay(1);
+    vTaskDelay( (1 * 1000) / portTICK_PERIOD_US );
   }
 
   if (_printDebug == true)
